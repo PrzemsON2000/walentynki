@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Czy zostaniesz moją walentynką?</title>
+  <style>
+    body {
+      background: #ffe6e6;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    /* Styl przycisku "Tak" */
+    #yes {
+      background-color: #ff6666;
+      color: white;
+    }
+    /* Styl przycisku "Nie" */
+    #no {
+      background-color: #cccccc;
+      color: black;
+    }
+    /* Klasa dodająca efekt powiększenia */
+    .enlarge {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>Czy zostaniesz moją walentynką?</h1>
+  <div class="buttons">
+    <button id="yes">Tak</button>
+    <button id="no">Nie</button>
+  </div>
+
+  <!-- EmailJS SDK - pamiętaj o rejestracji na https://www.emailjs.com/ -->
+  <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
+  <script type="text/javascript">
+    // Zastąp "YOUR_USER_ID" swoim identyfikatorem użytkownika z EmailJS
+    (function(){ emailjs.init("YOUR_USER_ID"); })();
+  </script>
+  <script>
+    const yesBtn = document.getElementById('yes');
+    const noBtn = document.getElementById('no');
+
+    // Efekt powiększenia przycisku "Tak" gdy kursor najedzie na przycisk "Nie"
+    noBtn.addEventListener('mouseover', function() {
+      yesBtn.classList.add('enlarge');
+    });
+    noBtn.addEventListener('mouseout', function() {
+      yesBtn.classList.remove('enlarge');
+    });
+    // Jeśli użytkowniczka kliknie przycisk "Nie", zapobiegamy domyślnej akcji
+    // i przenosimy uwagę na przycisk "Tak" (efekt powiększenia na krótko)
+    noBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      yesBtn.focus();
+      yesBtn.classList.add('enlarge');
+      setTimeout(() => {
+        yesBtn.classList.remove('enlarge');
+      }, 500);
+    });
+
+    // Po kliknięciu przycisku "Tak" wysyłamy dwa e-maile
+    yesBtn.addEventListener('click', function() {
+      // Wysyłamy e-mail na adres: prz.szt013@gmail.com z treścią "zgodziła się"
+      emailjs.send("YOUR_SERVICE_ID", "template_agree", {
+        to_email: "prz.szt013@gmail.com",
+        subject: "Potwierdzenie",
+        message: "zgodziła się"
+      })
+      .then(function(response) {
+         console.log("Email do prz.szt013@gmail.com wysłany!", response.status, response.text);
+      }, function(error) {
+         console.error("Błąd przy wysyłaniu emaila do prz.szt013@gmail.com:", error);
+      });
+
+      // Wysyłamy e-mail na adres: kingasawicka00@gmail.com z treścią "Gratuluję, jesteś walentynką Przemusia"
+      emailjs.send("YOUR_SERVICE_ID", "template_congrats", {
+        to_email: "prz.szt013@gmail.com",
+        subject: "Gratulacje",
+        message: "Gratuluję, jesteś walentynką Przemusia"
+      })
+      .then(function(response) {
+         console.log("Email do kingasawicka00@gmail.com wysłany!", response.status, response.text);
+      }, function(error) {
+         console.error("Błąd przy wysyłaniu emaila do kingasawicka00@gmail.com:", error);
+      });
+
+      alert("Wspaniale! Cieszę się, że zostajesz moją walentynką!");
+    });
+  </script>
+</body>
+</html>
